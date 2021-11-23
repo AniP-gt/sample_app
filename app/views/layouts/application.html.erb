@@ -13,6 +13,9 @@
   <body>
     <%= render 'layouts/header' %>
     <div class ="container">
+      <% flash.each do |message_type, message| %>       <!--変数falshのsuccessかdangerのいずれか -->
+        <div class= "alert alert-<%= message_type %>"><%= message %></div>  <!--cssにfalshの結果が反映、文字表示は結果の成功か失敗を表示 -->
+      <% end %>
       <%= yield %>
       <%= render 'layouts/footer' %>
       <%= debug(params) if Rails.env.development? %>

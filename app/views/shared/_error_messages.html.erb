@@ -1,0 +1,13 @@
+<!--エラーメッセージ-->
+<% if @user.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@user.errors.count, "error") %> <!--errorの英単語の複数化-->
+    </div>
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %> <!--エラーメッセージの繰り返し -->
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
