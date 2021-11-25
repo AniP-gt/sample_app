@@ -17,7 +17,10 @@ class SessionsController < ApplicationController
     end
   end
   
+  # セッションを破棄する（ユーザーのログアウト）
   def destroy
+    log_out   #sessions_helper.rbより
+    redirect_to root_url
   end
   
 end
