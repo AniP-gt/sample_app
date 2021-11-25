@@ -1,3 +1,4 @@
+# HTMLの各ページのコントロール
 class StaticPagesController < ApplicationController
   def home
   end

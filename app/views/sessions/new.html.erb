@@ -1,0 +1,20 @@
+<% provide(:title, "Log in") %>
+<h1>Log in</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+     <%= form_with(url: login_path, scope: :session, local: true) do |f| %>  <!--セッションの場合はリソースのスコープ（ここではセッション）とそれに対応するURLを具体的に指定-->
+    
+      <%= f.label :email %>                                 <!--<label for="user_email">Email</label>-->
+      <%= f.email_field :email, class: 'form-control' %>    <!--<input id="user_email" name="user[email]" type="email">-->
+
+      <%= f.label :password %>                                 <!--<label for="user_password">Password</label>-->
+      <%= f.password_field :password, class: 'form-control' %> <!--<input id="user_password" name="user[password]" type="password" />-->
+      
+      <%= f.submit "Log in", class: "btn btn-primary" %>
+    <% end %>
+    
+    <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+  </div>
+</div>
+ 

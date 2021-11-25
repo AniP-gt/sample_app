@@ -1,8 +1,9 @@
+# ユーザー登録時のコントロール
 class UsersController < ApplicationController
   
   #DBからユーザーを取り出す
   def show
-    @user = User.find(params[:id])  #modelのUserからidを取り出す
+    @user = User.find(params[:id])  #modelのクラスUserからidを取り出す
   end
   
   #form_withの引数で必要となるUserオブジェクトを作成（新規ユーザー登録アクション）

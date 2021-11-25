@@ -8,16 +8,20 @@
                                'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag    'application',
                                'data-turbolinks-track': 'reload' %>
-    <%= render 'layouts/shim' %>
+    <%= render 'layouts/shim' %>   <!--Microsoft Internet Explorer（IE）のバージョンが9より小さい場合（if lt IE 9）にのみ、囲まれている行を実行 -->
   </head>
   <body>
+    <!--header-->
     <%= render 'layouts/header' %>
+    <!--main-->
     <div class ="container">
       <% flash.each do |message_type, message| %>       <!--変数falshのsuccessかdangerのいずれか -->
         <div class= "alert alert-<%= message_type %>"><%= message %></div>  <!--cssにfalshの結果が反映、文字表示は結果の成功か失敗を表示 -->
       <% end %>
-      <%= yield %>
+      <%= yield %>　　<!--各ページの内容をレイアウトに挿入するためのもの-->
+      <!--footer-->
       <%= render 'layouts/footer' %>
+      <!--開発環境のみ表示　デバック情報-->
       <%= debug(params) if Rails.env.development? %>
     </div>
   </body>
