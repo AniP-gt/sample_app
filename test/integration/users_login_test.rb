@@ -4,19 +4,21 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   
   #有効な情報を使ってユーザーログインをテストする
   def setup
-    @user = users(:micheal)
+    @user = users(:michael)
   end
   
   
   # フラッシュメッセージの残留をキャッチするテスト
   test "login with invalid information" do  
-    get login_path                                                    #ログイン用のパスを開く
-    assert_template 'sessions/new'                                    #新しいセッションのフォームが正しく表示されたことを確認する
-    post login_path, params: {session: {email: "", password: ""}}    #わざと無効なparamsハッシュを使ってセッション用パスにPOSTする
-    assert_template 'sessions/new'                                    #新しいセッションのフォームが再度表示され、
-    assert_not flash.empty?                                           #フラッシュメッセージが追加されることを確認する
-    get root_path                                                     #別のページ（Homeページなど） にいったん移動する
-    assert flash.empty?                                               #移動先のページでフラッシュメッセージが表示されていないことを確認する
+    get login_path
+    post login_path, params: { session: { email:    @user.email,
+                                          password: 'password' } }
+    assert_redirected_to @user                                              #リダイレクト先が正しいかどうかをチェック
+    follow_redirect!                                                        #ログインパスのリンクがページにないかどうかで判定している
+    assert_template 'users/show'
+    assert_select "a[href=?]", login_path, count: 0                         #count: 0というオプションをassert_selectに追加すると、渡したパターンに一致するリンクが０かどうかを確認するようになります
+    assert_select "a[href=?]", logout_path
+    assert_select "a[href=?]", user_path(@user)                                       
   end
   
 end
