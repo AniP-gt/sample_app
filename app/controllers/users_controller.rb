@@ -23,6 +23,11 @@ class UsersController < ApplicationController
     end
   end
   
+  # ユーザーの編集画面
+  def edit
+    @user = User.find(params[:id])
+  end
+  
   private #外部から使えないキーワード
   
   #createアクションでStrong Parametersを使う
