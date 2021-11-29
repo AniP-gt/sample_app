@@ -12,9 +12,25 @@ class ActiveSupport::TestCase
   fixtures :all
 
   #テストユーザーがログイン中の場合にtrueを返す
+  # ヘルパーメソッドはテストから呼び出せないのでcurrent_userを呼び出せない代わりに、sessionメソッドでテストを代用
   def is_logged_in?     #ヘルパーメソッド名がテストヘルパーとSessionヘルパーで同じにならないようにしておく
     !session[:user_id].nil?
   end
 
+# テストユーザーとしてログインする（単体テスト）
+  def log_in_as(user)
+    session[:user_id] = user.id
+  end
   # Add more helper methods to be used by all tests here...
+end
+
+# 統合テスト用ヘルパー
+class ActionDispatch::IntegrationTest
+
+  # テストユーザーとしてログインする
+  def log_in_as(user, password: 'password', remember_me: '1')
+    post login_path, params: { session: { email: user.email,
+                                          password: password,
+                                          remember_me: remember_me } }
+  end
 end

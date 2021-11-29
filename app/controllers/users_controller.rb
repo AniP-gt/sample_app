@@ -15,7 +15,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params) 
     if @user.save                                       #保存の成功をここで扱う
-      log_in @user                                      #ユーザー登録中にログインする
+      log_in @user                                      #ユーザー登録中にログインする =>　登録完了後自動でログイン後のユーザー画面へ遷移
       flash[:success] = "Welcome to the Sample App!"    #変数falshにリダイレクト後のメッセージを表示
       redirect_to @user                                 #ユーザー登録に成功した場合はページを描画せずに別のページにリダイレクト　=>　プロフィールページへ
     else
