@@ -28,6 +28,15 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
   
+  # ユーザーの更新フォーム
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)                        #更新に成功した場合
+    else
+      render 'edit'                                     #エラーの場合、editにもどる
+    end
+  end
+  
   private #外部から使えないキーワード
   
   #createアクションでStrong Parametersを使う
