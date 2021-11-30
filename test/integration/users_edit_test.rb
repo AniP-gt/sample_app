@@ -9,6 +9,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   
   # 編集の失敗テスト
   test "unsuccessful edit" do
+    log_in_as(@user)                                                                    #テストユーザー  test/test_helper.rb                                                                                                     
     get edit_user_path(@user)
     assert_template 'users/edit'
     patch user_path(@user), params: { user: { name: "",                                 #nameは空欄、email、passwordは適当な文字列を入れる
@@ -20,6 +21,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
 
   # 編集の成功に対するテスト
   test "successful edit" do
+    log_in_as(@user)
     get edit_user_path(@user)                                                         #getでeditへリクエスト
     assert_template 'users/edit'                                                      #editの呼び出し
     name = "Foo Bar"                                                                  #変数nameの定義

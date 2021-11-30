@@ -1,5 +1,7 @@
 # ユーザー登録時のコントロール
 class UsersController < ApplicationController
+  # beforeアクション定義
+  before_action :logged_in_user, only: [:edit, :update] #編集と更新時のみ
   
   #DBからユーザーを取り出す
   def show
@@ -45,6 +47,16 @@ class UsersController < ApplicationController
   #:user属性を必須とし、名前、メールアドレス、パスワード、パスワードの確認の属性をそれぞれ許可し、それ以外を許可しない
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+  
+  # beforeアクション
+  
+  # ログイン済みユーザーかどうか確認
+  def logged_in_user
+    unless logged_in?                       #ログインしていなければ
+      flash[:danger] = "Please log in."     #falsh変数にてメッセージ
+      redirect_to login_url                 #ログイン画面に遷移
+    end
   end
   
 end
