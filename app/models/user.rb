@@ -9,7 +9,7 @@ class User < ApplicationRecord
                     uniqueness: {case_sensitive: false}       #メールアドレスの大文字小文字を無視した一意性の検証
   has_secure_password                                         #セキュアなパスワードを持っている　=>　パスワードのハッシュ化　⇔　DB内のpassword_digestという属性に保存　
                                                               # =>　dbファイルの「add_password_digest_to_users.rb」に追記　プラスauthenticateメソッドも使える以下
-  validates :password, presence: true, length: {minimum: 6}   #password属性の存在性を検証、最小6文字から
+  validates :password, presence: true, length: {minimum: 6}, allow_nil: true   #password属性の存在性を検証、最小6文字から、空のパスワード（nil）を許可
 
 # fixture向けのdigestメソッドを追加
 # digestメソッドをUserクラス自身に配置して、クラスメソッドにする
