@@ -1,7 +1,8 @@
 # ユーザー登録時のコントロール
 class UsersController < ApplicationController
   # beforeアクション定義
-  before_action :logged_in_user, only: [:edit, :update] #編集と更新時のみ
+  before_action :logged_in_user, only: [:edit, :update] #ログイン済みユーザーかどうか確認
+  before_action :correct_user,   only: [:edit, :update] #正しいユーザーかどうか確認
   
   #DBからユーザーを取り出す
   def show
@@ -27,12 +28,12 @@ class UsersController < ApplicationController
   
   # ユーザーの編集画面
   def edit
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])                    #beforeで設定したため不要
   end
   
   # ユーザーの更新フォーム
   def update
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])                    #beforeで設定したため不要
     if @user.update(user_params)                        #更新に成功した場合
        flash[:success] = "Profile update"               
        redirect_to @user
@@ -44,7 +45,7 @@ class UsersController < ApplicationController
   private #外部から使えないキーワード
   
   #createアクションでStrong Parametersを使う
-  #:user属性を必須とし、名前、メールアドレス、パスワード、パスワードの確認の属性をそれぞれ許可し、それ以外を許可しない
+  #:user属性を要求し、名前、メールアドレス、パスワード、パスワードの確認のカラムをそれぞれ許可し、それ以外のカラムを許可しない
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
@@ -57,6 +58,12 @@ class UsersController < ApplicationController
       flash[:danger] = "Please log in."     #falsh変数にてメッセージ
       redirect_to login_url                 #ログイン画面に遷移
     end
+  end
+  
+  # 正しいユーザーかどうか確認
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_url) unless current_user?(@user)  #sessions/helper => current_userメソッド
   end
   
 end
