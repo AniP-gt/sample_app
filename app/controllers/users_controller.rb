@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   
   # 全てのユーザーを表示する
   def index
-    @users = User.all
+    @users = User.paginate(page: params[:page])   #Usersをページネートする  paginate　=> Gemfileより　、view/index.htmlのwill_paginateに連動
   end
   
   #DBからユーザーを取り出す
