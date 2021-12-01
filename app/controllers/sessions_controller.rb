@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])     #ユーザーがデータベースにあり、かつ、認証に成功した場合にのみ
       log_in user  #helpers/sessions_helperのモジュール
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)  #app/models/user.rb  永続セッションのためにユーザーをデータベースに記憶する チェックボックスの送信結果を処理する(チェックボックスがオンの時に'1'、オフのときに'0')
-      redirect_to user  #ユーザーログイン後にユーザー情報のページにリダイレクトする　=> user_url(user)プロフィールページへのルーティング
+      redirect_back_or user  #リクエストされたURLが存在する場合はそこにリダイレクトし、ない場合は何らかのデフォルトのURLにリダイレクトする
     else
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       flash.now[:danger] = 'Invalid email/password combination'  #文字列    

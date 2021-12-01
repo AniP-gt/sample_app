@@ -63,6 +63,17 @@ module SessionsHelper
     @current_user = nil         #現在のユーザーをnilの状態にしておく　
   end
   
+  # 記憶したURL（もしくはデフォルト値）にリダイレクト
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default) 
+    session.delete(:forwarding_url)
+  end
+  
+  # アクセスしようとしたURLを覚えておく
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?  #GETリクエストだけが送られたURLをsession変数の:forwarding_urlキーに格納、エラー回避のためif文にて、GETが送られてきたか確認。request.original_urlでリクエスト先が取得できます
+  end
+  
 end
 
 
