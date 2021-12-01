@@ -14,6 +14,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get users_new_url
     assert_response :success
   end
+
+  # ログインしていないときにインデックスをリダイレクトする必要があります
+  test "should redirect index when not logged in" do
+    get users_path
+    assert_redirected_to login_url
+  end
   
   # ログインしていないときに編集をリダイレクトする必要があるテスト
   test "should redirect edit when not logged in" do

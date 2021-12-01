@@ -1,8 +1,13 @@
 # ユーザー登録時のコントロール
 class UsersController < ApplicationController
   # beforeアクション定義
-  before_action :logged_in_user, only: [:edit, :update] #ログイン済みユーザーかどうか確認
+  before_action :logged_in_user, only: [:index, :edit, :update] #ログイン済みユーザーかどうか確認
   before_action :correct_user,   only: [:edit, :update] #正しいユーザーかどうか確認
+  
+  # 全てのユーザーを表示する
+  def index
+    @users = User.all
+  end
   
   #DBからユーザーを取り出す
   def show
