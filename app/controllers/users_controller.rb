@@ -1,9 +1,9 @@
 # ユーザー登録時のコントロール
 class UsersController < ApplicationController
   # beforeアクション定義
-  before_action :logged_in_user, only: [:index, :edit, :update] #ログイン済みユーザーかどうか確認
-  before_action :correct_user,   only: [:edit, :update]         #正しいユーザーかどうか確認
-  before_action :amin_user,      only: :destroy                 #削除アクション
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] #ログイン済みユーザーかどうか確認
+  before_action :correct_user,   only: [:edit, :update]                   #正しいユーザーかどうか確認
+  before_action :admin_user,     only: :destroy                           #削除アクション
   
   # 全てのユーザーを表示する
   def index
@@ -80,6 +80,7 @@ class UsersController < ApplicationController
     redirect_to(root_url) unless current_user?(@user)  #sessions/helper => current_userメソッド
   end
   
+  # destroyアクションを管理者だけに限定する =>サイトを正しく防衛するため
   def admin_user
     redirect_to(root_url) unless current_user.admin?
   end
