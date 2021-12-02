@@ -2,7 +2,8 @@
 class UsersController < ApplicationController
   # beforeアクション定義
   before_action :logged_in_user, only: [:index, :edit, :update] #ログイン済みユーザーかどうか確認
-  before_action :correct_user,   only: [:edit, :update] #正しいユーザーかどうか確認
+  before_action :correct_user,   only: [:edit, :update]         #正しいユーザーかどうか確認
+  before_action :amin_user,      only: :destroy                 #削除アクション
   
   # 全てのユーザーを表示する
   def index
@@ -47,6 +48,13 @@ class UsersController < ApplicationController
     end
   end
   
+  # ユーザー削除
+  def destroy
+    User.find(params[:id]).destroy                      #HTTPのDELETEリクエスト=>destroyアクションを対象のユーザーidに適用
+    flash[:success] = "User deleted"                    #flashメソッドにより成功ならばコメント
+    redirect_to users_url                               #/usersに遷移
+  end
+  
   private #外部から使えないキーワード
   
   #createアクションでStrong Parametersを使う
@@ -70,6 +78,10 @@ class UsersController < ApplicationController
   def correct_user
     @user = User.find(params[:id])
     redirect_to(root_url) unless current_user?(@user)  #sessions/helper => current_userメソッド
+  end
+  
+  def admin_user
+    redirect_to(root_url) unless current_user.admin?
   end
   
 end
