@@ -1,7 +1,8 @@
 # ユーザー登録のコントローラー
 class User < ApplicationRecord
-  attr_accessor :remember_token                               #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
-  before_save { self.email = email.downcase}                  #emailの小文字化
+  attr_accessor :remember_token, :activation_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
+  before_save   :downcase_email                               #emailの小文字化 => downcase_emailメソッド参照
+  before_create :create_activation_digest                     #
   validates :name, presence: true, length: { maximum: 50}     #name属性の存在性を検証、最大50文字まで = validates(:name, presence: true)
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i    #完全な正規表現
   validates :email, presence: true, length: { maximum: 255},  #emailの存在性を検証、最大255文字まで
@@ -45,6 +46,21 @@ class User < ApplicationRecord
 # ユーザーのログイン情報を破棄する（ログアウト、永続セッションを終了）
   def forget
     update_attribute(:remember_digest, nil)                        #user.rememberの取り消し　=> remember_digestをnilで更新
+  end
+  
+  #以下非公開
+  private
+  
+  # メールアドレスを全て小文字にする
+  def downcase_email
+    self.email = email.downcase
+  end
+  
+  
+  # 有効かトークンとダイジェストを作成および代入する
+  def create_activation_digest
+    self.activation_token  = User.new_token                       #User.new_tokenメソッド（ランダムなトークンを返す）をアクセサ変数に代入
+    self.activation_digest = User.digest(activation_token)         #既にデータベースのカラムとの関連付けができあがっているので、ユーザーが保存されるときに一緒に保存されます
   end
   
 end

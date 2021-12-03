@@ -12,7 +12,9 @@ User.create!(name:  "Example User",
              email: "example@railstutorial.org",
              password:              "foobar",
              password_confirmation: "foobar",
-             admin: true                             #特権を持つ管理ユーザー
+             admin: true,                             #特権を持つ管理ユーザー
+             activated: true,                         #アカウント有効化である　=>true
+             activated_at: Time.zone.now              #サーバーのタイムゾーンに応じたタイムスタンプを返します
              )
 
 # 追加のユーザーをまとめて生成する
@@ -23,7 +25,10 @@ User.create!(name:  "Example User",
   User.create!(name:  name,
                email: email,
                password:              password,
-               password_confirmation: password)
+               password_confirmation: password,
+               activated: true,
+               activated_at: Time.zone.now
+               )
 end
 
 # create!は基本的にcreateメソッドと同じものですが、ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
