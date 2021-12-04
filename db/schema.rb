@@ -20,9 +20,6 @@ ActiveRecord::Schema.define(version: 2021_12_03_121617) do
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
-    t.string "acctivation_digest"
-    t.boolean "acctivated", default: false
-    t.datetime "acctivated_at"
     t.string "activation_digest"
     t.boolean "activated", default: false
     t.datetime "activated_at"

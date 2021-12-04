@@ -3,7 +3,7 @@ class UserMailer < ApplicationMailer
 # アカウント有効化リンクをメール送信する
   def account_activation(user)
     @user = user
-    mail to: user.email, subject: "Account activation"            #メールの件名
+    mail to: user.email, subject: "Account activation"
   end
 
 
