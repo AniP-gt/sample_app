@@ -1,0 +1,17 @@
+<!--アカウント有効化のHTMLビュー-->
+<h1>Sample App</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<p>
+Welcome to the Sample App! Click on the link below to activate your account: 
+</p>
+
+<%= link_to "Activate", edit_account_activation_url(@user.activation_token,　    #変数@userのUserclassのactivation_tokenを適用
+                                                    email: @user.email) %>
+                                                    
+<!--※以下備考欄
+・メールアドレスの「@」記号がURLでは「%40」となっている点に注目してください。これは「エスケープ」と呼ばれる手法で、通常URLでは扱えない文字を扱えるようにするために変換されています。
+　Railsでクエリパラメータを設定するには、名前付きルートでクエリパラメータを定義すると、Railsが特殊な文字を自動的にエスケープしてくれます
+-->
+                                                    
