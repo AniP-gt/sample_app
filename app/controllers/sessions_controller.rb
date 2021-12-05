@@ -5,11 +5,18 @@ class SessionsController < ApplicationController
   
   #ユーザーのログイン
   def create
-    user = User.find_by(email: params[:session][:email].downcase) #変数userに送信されたメールアドレスを使って、データベースからユーザーを取り出す
-    if user && user.authenticate(params[:session][:password])     #ユーザーがデータベースにあり、かつ、認証に成功した場合にのみ
-      log_in user  #helpers/sessions_helperのモジュール
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)  #app/models/user.rb  永続セッションのためにユーザーをデータベースに記憶する チェックボックスの送信結果を処理する(チェックボックスがオンの時に'1'、オフのときに'0')
-      redirect_back_or user  #リクエストされたURLが存在する場合はそこにリダイレクトし、ない場合は何らかのデフォルトのURLにリダイレクトする
+    user = User.find_by(email: params[:session][:email].downcase)              #変数userに送信されたメールアドレスを使って、データベースからユーザーを取り出す
+    if user && user.authenticate(params[:session][:password])                  #ユーザーがデータベースにあり、かつ、認証に成功した場合にのみ
+      if user.activated?                                                       #有効でないユーザーがログインすることのないようにする
+        log_in user                                                            #helpers/sessions_helperのモジュール
+        params[:session][:remember_me] == '1' ? remember(user) : forget(user)  #app/models/user.rb  永続セッションのためにユーザーをデータベースに記憶する チェックボックスの送信結果を処理する(チェックボックスがオンの時に'1'、オフのときに'0')
+        redirect_back_or user                                                  #リクエストされたURLが存在する場合はそこにリダイレクトし、ない場合は何らかのデフォルトのURLにリダイレクトする
+      else
+        message = "Account not activated."                                     #変数message
+        message += "Check your email for the activation link."                 #前述の変数messageと組わせて上書き
+        flash[:warning] = message                                             
+        redirect_to root_url
+      end
     else
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       flash.now[:danger] = 'Invalid email/password combination'  #文字列    
