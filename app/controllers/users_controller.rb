@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params) 
     if @user.save                                       #保存の成功をここで扱う
-        UserMailer.account_activation(@user).deliver_now  #今すぐ送信する
+        @user.send_activation_email                     #ユーザーモデルオブジェクトからメールを送信する
         flash[:info] = "Please check your email to activate your account."
         redirect_to root_url    
       else
