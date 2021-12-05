@@ -78,7 +78,7 @@ class UserTest < ActiveSupport::TestCase
   
   # ダイジェストが存在しない場合のauthenticated?のテスト　ログアウトバグ２つ目のテスト
   test "authenticated? should return false for a user with nil digest" do
-    assert_not @user.authenticated?('')
+    assert_not @user.authenticated?(:remember, '')
   end
   
 end

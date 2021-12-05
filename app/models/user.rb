@@ -38,9 +38,10 @@ class User < ApplicationRecord
   end
   
 # 渡された上記のトークンがダイジェストと一致したらtrueを返す
-  def authenticated?(remember_token)                                      #ローカル変数remember_token　=> アクセサとは異なる
-    return false if remember_digest.nil?                                  #記憶ダイジェストがnilの場合にfalseを返す ログアウトバグ２つ目の対処
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)    #渡されたトークン（remember_token）がDB上のremember_digestと一致することを確認します。　bcryptで暗号化されたパスワードを、トークンと直接比較
+  def authenticated?(attribute ,token)                           #引数attribute、tokenを設定
+    digest = send("#{attribute}_digest")                         #変数digestにsendメソッドを使って引数attributeに文字列を代入し、変数に返す
+    return false if digest.nil?                                  #変数digestがnilの場合にfalseを返す ログアウトバグ２つ目の対処
+    BCrypt::Password.new(digest).is_password?(token)             #渡されたトークン（remember_token）がDB上のremember_digestと一致することを確認します。　bcryptで暗号化されたパスワードを、トークンと直接比較
   end
   
 # ユーザーのログイン情報を破棄する（ログアウト、永続セッションを終了）

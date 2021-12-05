@@ -14,14 +14,14 @@ module SessionsHelper
     cookies.permanent[:remember_token] = user.remember_token      #DB上のremember.tokenカラムにに20年永続する設定した
   end
   
-  #記憶トークンcookieに対するユーザーを返す
+  #記憶トークンcookieに対するユーザーを返す 現在ログイン中のユーザーを返す（いる場合）
   def current_user
     if (user_id = session[:user_id])                              #（ユーザーIDにユーザーIDのセッションを代入した結果）ユーザーIDのセッションが存在すれば  変数user_idに代入
       @current_user ||= User.find_by(id: user_id)                 # セッションにユーザーID（変数user_idより）が存在しない場合、このコードは単に終了して自動的にnilを返します。 変数current_userに代入
     elsif (user_id = cookies.signed[:user_id])                    # 上記ifで無かった場合、user.idにcookiesで署名したidを代入
       # raise                                                       # テストがパスすれば、この部分がテストされていないことがわかる（例外をあえて仕込む、テストのため）
       user = User.find_by(id: user_id)                            # 変数userに検索したidを代入する
-      if user && user.authenticated?(cookies[:remember_token])    # 変数userかつcookiesのremember_tokenカラムを含んだユーザーが認証済みであった場合
+      if user && user.authenticated?(:remember, cookies[:remember_token])    # 変数userかつcookiesのremember_tokenカラムを含んだユーザーが認証済みであった場合
         log_in user                                               # 変数userはログイン
         @current_user = user                                      # 最後に変数current_userに変数userを代入（ログアウトのため）
       end
