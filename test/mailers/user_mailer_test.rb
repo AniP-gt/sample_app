@@ -8,9 +8,9 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal "Account activation", mail.subject
     assert_equal [user.email], mail.to
     assert_equal ["noreply@example.com"], mail.from
-    assert_match user.name,               mail.html_part.body.encoded      #assert_math　=> 正規表現のため文字列をそのままテスト
-    assert_match user.activation_token,   mail.html_part.body.encoded
-    assert_match CGI.escape(user.email),  mail.html_part.body.encoded      #テスト用のユーザーのメールアドレスをエスケープする
+    assert_match user.name,               mail.text_part.body.to_s      #assert_math　=> 正規表現のため文字列を
+    assert_match user.activation_token,   mail.text_part.body.to_s
+    assert_match CGI.escape(user.email),  mail.text_part.body.to_s      #テスト用のユーザーのメールアドレスをエスケープする
   end
 
   # test "password_reset" do

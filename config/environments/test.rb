@@ -41,7 +41,7 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   # テストのドメインホストを設定する
-  config.action_mailer.default_url_options = { host: 'example.com' }
+  config.action_mailer.default_url_options = { host: 'https://bed86814729a48ac8e7401cc6fe41b6b.vfs.cloud9.us-east-1.amazonaws.com/' }
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
