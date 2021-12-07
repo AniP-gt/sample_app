@@ -1,6 +1,7 @@
 class PasswordResetsController < ApplicationController
   def new
   end
+  
   # パスワード再設定用のcreateアクション
   def create
     @user = User.find_by(email: params[:password_reset][:email].downcase)       #インスタンス変数userにemailキーのpassword_resetとemail値を小文字にして代入

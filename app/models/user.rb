@@ -1,15 +1,15 @@
 # ユーザー登録のコントローラー
 class User < ApplicationRecord
-  attr_accessor :remember_token, :activation_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
-  before_save   :downcase_email                               #emailの小文字化 => downcase_emailメソッド参照
-  before_create :create_activation_digest                     #
-  validates :name, presence: true, length: { maximum: 50}     #name属性の存在性を検証、最大50文字まで = validates(:name, presence: true)
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i    #完全な正規表現
-  validates :email, presence: true, length: { maximum: 255},  #emailの存在性を検証、最大255文字まで
-                    format: {with: VALID_EMAIL_REGEX},        #formatオプションを用いて、引数に正規表現を取る
-                    uniqueness: {case_sensitive: false}       #メールアドレスの大文字小文字を無視した一意性の検証
-  has_secure_password                                         #セキュアなパスワードを持っている　=>　パスワードのハッシュ化　⇔　DB内のpassword_digestという属性に保存　
-                                                              # =>　dbファイルの「add_password_digest_to_users.rb」に追記　プラスauthenticateメソッドも使える以下
+  attr_accessor :remember_token, :activation_token, :reset_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
+  before_save   :downcase_email                                             #emailの小文字化 => downcase_emailメソッド参照
+  before_create :create_activation_digest                                   #
+  validates :name, presence: true, length: { maximum: 50}                   #name属性の存在性を検証、最大50文字まで = validates(:name, presence: true)
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i                  #完全な正規表現
+  validates :email, presence: true, length: { maximum: 255},                #emailの存在性を検証、最大255文字まで
+                    format: {with: VALID_EMAIL_REGEX},                      #formatオプションを用いて、引数に正規表現を取る
+                    uniqueness: {case_sensitive: false}                     #メールアドレスの大文字小文字を無視した一意性の検証
+  has_secure_password                                                       #セキュアなパスワードを持っている　=>　パスワードのハッシュ化　⇔　DB内のpassword_digestという属性に保存　
+                                                                            # =>　dbファイルの「add_password_digest_to_users.rb」に追記　プラスauthenticateメソッドも使える以下
   validates :password, presence: true, length: {minimum: 6}, allow_nil: true   #password属性の存在性を検証、最小6文字から、空のパスワード（nil）を許可
 
 # fixture向けのdigestメソッドを追加
@@ -73,6 +73,43 @@ class User < ApplicationRecord
     self.activation_token  = User.new_token                       #User.new_tokenメソッド（ランダムなトークンを返す）をアクセサ変数に代入
     self.activation_digest = User.digest(activation_token)         #既にデータベースのカラムとの関連付けができあがっているので、ユーザーが保存されるときに一緒に保存されます
   end
+  
+    # アカウントを有効にする
+  def activate
+    update_attribute(:activated,    true)
+    update_attribute(:activated_at, Time.zone.now)
+  end
+
+  # 有効化用のメールを送信する
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  # パスワード再設定の属性を設定する
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest,  User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  # パスワード再設定のメールを送信する
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  private
+
+    # メールアドレスをすべて小文字にする
+    def downcase_email
+      self.email = email.downcase
+    end
+
+    # 有効化トークンとダイジェストを作成および代入する
+    def create_activation_digest
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
+  
   
 end
 
