@@ -23,8 +23,6 @@ class User < ApplicationRecord
   end
   # => test/fixtures/users.ymlでユーザーログイン用のテスト設定
   
-  
-  
 # 以下よりユーザーが明示的にログアウトを実行しない限り、ログイン状態を維持する
 # ランダムなトークンを返す
   def User.new_token
@@ -63,12 +61,17 @@ class User < ApplicationRecord
   def create_reset_digest
     self.reset_token = User.new_token
     update_attribute(:reset_digest,  User.digest(reset_token))
-    update_attribute(:reset_sent_at, Time.zone.now)
+    update_attribute(:reset_sent_at, Time.zone.now)                 #短時間で期限切れ(:reset_sent_at)
   end
 
   # パスワード再設定のメールを送信する
   def send_password_reset_email
     UserMailer.password_reset(self).deliver_now
+  end
+  
+    # パスワード再設定の期限が切れている場合はtrueを返す
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago         #パスワード再設定メールの送信時刻が、現在時刻より2時間以上前（早い）の場合
   end
   
   #以下非公開
@@ -85,9 +88,6 @@ class User < ApplicationRecord
     self.activation_token  = User.new_token                       #User.new_tokenメソッド（ランダムなトークンを返す）をアクセサ変数に代入
     self.activation_digest = User.digest(activation_token)         #既にデータベースのカラムとの関連付けができあがっているので、ユーザーが保存されるときに一緒に保存されます
   end
-  
-  
-  
   
 end
 
