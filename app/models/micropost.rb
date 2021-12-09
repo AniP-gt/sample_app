@@ -1,6 +1,8 @@
 # 自動生成されたMicropostモデル
 class Micropost < ApplicationRecord
-  belongs_to :user                      #ユーザーと１対１の関係であることを表す
+  belongs_to :user                                                          #ユーザーと１対１の関係であることを表す
+  validates :user_id, presence: true                                        #マイクロポストのuser_idに対する検証
+  validates :content, presence: true, length: { maximum: 140 }              #content属性の検証　140文字まで　
 end
 
 
