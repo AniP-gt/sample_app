@@ -1,5 +1,6 @@
 # ユーザー登録のコントローラー
 class User < ApplicationRecord
+  has_many :microposts                                                      #ユーザーがマイクロポストを複数所有する
   attr_accessor :remember_token, :activation_token, :reset_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
   before_save   :downcase_email                                             #emailの小文字化 => downcase_emailメソッド参照
   before_create :create_activation_digest                                   #
