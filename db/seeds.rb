@@ -31,4 +31,13 @@ User.create!(name:  "Example User",
                )
 end
 
+# ユーザーの一部を対象にマイクロポストを生成する
+users = User.order(:created_at).take(6)                                 #orderメソッドを経由することで、作成されたユーザーの最初の6人を明示的に呼び出す
+50.times do                                                             #50個のマイクロポスト
+  content = Faker::Lorem.sentence(word_count: 5)                        #各投稿内容  Faker gemにLorem.sentenceという便利なメソッドを使用
+  users.each { |user| user.microposts.create!(content: content) }       #ユーザー毎に50個分のマイクロポストをまとめて作成してしまうと、ステータスフィードに表示される投稿がすべて同じユーザーになってしまい、視覚的な見栄えが悪くなる
+end
+
+
+
 # create!は基本的にcreateメソッドと同じものですが、ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
