@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   #DBからユーザーを取り出す
   def show
     @user = User.find(params[:id])                      #modelのクラスUserからidを取り出す
+    @microposts = @user.microposts.paginate(page: params[:page]) #マイクロポストの関連付けを経由してmicropostsテーブルに到達し、必要なマイクロポストのページを引き出してくれます。
   end
   
   #form_withの引数で必要となるUserオブジェクトを作成（新規ユーザー登録アクション）
