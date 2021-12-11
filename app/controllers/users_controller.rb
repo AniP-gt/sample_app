@@ -66,15 +66,6 @@ class UsersController < ApplicationController
   
   # beforeアクション
   
-  # ログイン済みユーザーかどうか確認
-  def logged_in_user
-    unless logged_in?                       #ログインしていなければ
-      store_location                        #アクセスしようとしたURLを覚えておく
-      flash[:danger] = "Please log in."     #falsh変数にてメッセージ
-      redirect_to login_url                 #ログイン画面に遷移
-    end
-  end
-  
   # 正しいユーザーかどうか確認
   def correct_user
     @user = User.find(params[:id])
