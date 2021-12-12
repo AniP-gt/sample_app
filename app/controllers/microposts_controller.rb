@@ -4,6 +4,7 @@ class MicropostsController < ApplicationController
 
   def create
     @micropost = current_user.microposts.build(micropost_params)          #新しいマイクロポストをbuildするためにUser/Micropost関連付けを使う
+    @micropost.image.attach(params[:micropost][:image])                   #アップロードされた画像を@micropostオブジェクトにアタッチする
     if @micropost.save                                                    
       flash[:success] = "Micropost created!"
       redirect_to root_url
@@ -22,8 +23,9 @@ class MicropostsController < ApplicationController
   private
 
 # micropost_paramsでStrong Parametersを使っていることにより、マイクロポストのcontent属性だけがWeb経由で変更可能
+# :imageを許可済み属性リストに追加し、Web経由で更新できるようにする
     def micropost_params
-      params.require(:micropost).permit(:content)
+      params.require(:micropost).permit(:content, :image)
     end
     
     # findメソッドを呼び出すことで、現在のユーザーが削除対象のマイクロポストを保有しているかどうかを確認
