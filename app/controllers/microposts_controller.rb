@@ -7,6 +7,7 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
+      @feed_items = current_user.feed.paginate(page: params[:page])         #Micropostsコントローラのcreateアクションへの送信が失敗した場合に備えて、必要なフィード変数をこのブランチで渡しておく
       render 'static_pages/home'
     end
   end

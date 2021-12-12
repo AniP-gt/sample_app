@@ -75,6 +75,13 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago         #パスワード再設定メールの送信時刻が、現在時刻より2時間以上前（早い）の場合
   end
   
+  # 試作feedの定義
+  # 完全な実装は次章の「ユーザーをフォローする」を参照
+  # マイクロポストのステータスフィードを実装するための準備
+  def feed
+    Micropost.where("user_id = ?", id)                #SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション（SQL Injection）呼ばれる深刻なセキュリティホールを避けることができます
+  end
+  
   #以下非公開
   private
   

@@ -1,7 +1,10 @@
 # HTMLの各ページのコントロール
 class StaticPagesController < ApplicationController
   def home
-    @micropost = current_user.microposts.build if logged_in?        #current_userメソッドはユーザーがログインしているとき
+    if logged_in?
+      @micropost  = current_user.microposts.build
+      @feed_items = current_user.feed.paginate(page: params[:page])       #フィード機能を導入するため、ログインユーザーのフィード用
+    end 
   end
 
   def help
