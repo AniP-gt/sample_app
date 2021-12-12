@@ -9,6 +9,12 @@ class Micropost < ApplicationRecord
                                       message: "must be a valid image format" },    #
                       size:         { less_than: 5.megabytes,                       #比較文　
                                       message: "should be less than 5MB" }  
+  
+  # 表示用のリサイズ済み画像を返す
+  def display_image
+    image.variant(resize_to_limit: [500, 500])                              #画像の幅や高さが500ピクセルを超えることのないように制約をかけます
+  end
+  
 end
 
 
