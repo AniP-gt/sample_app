@@ -10,7 +10,7 @@
     <!--Active Recordによって自動生成されるメッセージを使う-->
     <%= form_with(model: @user, local: true) do |f| %>  
     
-      <%= render 'shared/error_messages' %>  <!--app/views/shared -->
+      <%= render 'shared/error_messages', object: f.object %> <!--app/views/shared -->
       
       <%= f.label :name %>　　　　　　　　　                <!--<label for="user_name">Name</label>-->
       <%= f.text_field :name, class: 'form-control' %>      <!--<input id="user_name" name="user[name]" type="text" />-->
