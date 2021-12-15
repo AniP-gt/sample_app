@@ -97,6 +97,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not michael.following?(archer)                       #following?メソッドであるユーザーをまだフォローしていないことを確認
     michael.follow(archer)                                      #followメソッドを使ってそのユーザーをフォロー
     assert michael.following?(archer)                           #following?メソッドを使ってフォロー中になったことを確認
+    assert archer.followers.include?(michael)                   #followersに対するテスト 
     michael.unfollow(archer)                                    #unfollowメソッドでフォロー解除できたことを確認
     assert_not michael.following?(archer)                       #following?メソッドであるユーザーを再度フォローしていないことを確認
   end  
