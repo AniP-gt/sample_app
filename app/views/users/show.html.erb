@@ -7,10 +7,16 @@
         <%= @user.name %> <!--変数@userのname  => users_controller -->
       </h1>
     </section>
+    <!--フォロワーの統計情報-->
+    <section class="stats">
+      <%= render 'shared/stats' %>
+    </section>
   </aside>
   
   <!--マイクロポストを追加-->
     <div class="col-md-8">
+      <!--フォロー用フォーム-->
+      <%= render 'follow_form' if logged_in? %>
     <% if @user.microposts.any? %>
       <h3>Microposts (<%= @user.microposts.count %>)</h3>
       <ol class="microposts">

@@ -39,5 +39,12 @@ users = User.order(:created_at).take(6)                                 #order�
 end
 
 
+# 以下のリレーションシップを作成する
+users = User.all
+user  = users.first
+following = users[2..50]                                                #最初のユーザーにユーザー3からユーザー51までをフォローさせ
+followers = users[3..40]                                                #逆にユーザー4からユーザー41に最初のユーザーをフォローさせます
+following.each { |followed| user.follow(followed) }
+followers.each { |follower| follower.follow(user) }
 
 # create!は基本的にcreateメソッドと同じものですが、ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
