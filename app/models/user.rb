@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :active_relationships, class_name:  "Relationship",              #ActiveRelationshipモデルを探してしまい）Relationshipモデルを見つけることができません。followerというクラス名は存在しないので、ここでもRailsに正しいクラス名を伝える
                                   foreign_key: "follower_id",               #データベースの2つのテーブルを繋ぐ
                                   dependent:   :destroy  
+  has_many :following, through: :active_relationships, source: :followed    #1人のユーザーにはいくつもの「フォローする」「フォローされる」といった関係性の設定      :sourceパラメーターを使って、「following配列の元はfollowed idの集合である」ということを明示する
   attr_accessor :remember_token, :activation_token, :reset_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
   before_save   :downcase_email                                             #emailの小文字化 => downcase_emailメソッド参照
   before_create :create_activation_digest                                   #
@@ -84,6 +85,23 @@ class User < ApplicationRecord
   def feed
     Micropost.where("user_id = ?", id)                #SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション（SQL Injection）呼ばれる深刻なセキュリティホールを避けることができます
   end
+  
+  
+    # ユーザーをフォローする
+  def follow(other_user)
+    following << other_user                           #<<演算子（Shovel Operator）で配列の最後に追記することができます
+  end
+
+  # ユーザーをフォロー解除する
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy          #other_user.id =>  userと紐づけてフォローを解除する
+  end
+
+  # 現在のユーザーがフォローしてたらtrueを返す
+  def following?(other_user)
+    following.include?(other_user)
+  end
+  
   
   #以下非公開
   private
