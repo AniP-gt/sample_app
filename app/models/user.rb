@@ -1,6 +1,9 @@
 # ユーザー登録のコントローラー
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy                                 #has_many=>userとmicropost_user_idを紐づける、dependent:destroy=> ユーザーが削除されたときに、そのユーザーに紐付いた（そのユーザーが投稿した）マイクロポストも一緒に削除される
+  has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy  
   attr_accessor :remember_token, :activation_token, :reset_token            #インスタンス変数 永続セッションのための仮想の属性　メソッドの枠を超えてアクセスできる特殊な変数
   before_save   :downcase_email                                             #emailの小文字化 => downcase_emailメソッド参照
   before_create :create_activation_digest                                   #
