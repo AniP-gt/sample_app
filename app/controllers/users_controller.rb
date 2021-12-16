@@ -1,7 +1,8 @@
 # ユーザー登録時のコントロール
 class UsersController < ApplicationController
   # beforeアクション定義
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] #ログイン済みユーザーかどうか確認
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy,
+                                        :following, :followers] #ログイン済みユーザーかどうか確認
   before_action :correct_user,   only: [:edit, :update]                   #正しいユーザーかどうか確認
   before_action :admin_user,     only: :destroy                           #削除アクション
   
@@ -55,6 +56,22 @@ class UsersController < ApplicationController
     flash[:success] = "User deleted"                    #flashメソッドにより成功ならばコメント
     redirect_to users_url                               #/usersに遷移
   end
+  
+  
+    def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+  
   
   private #外部から使えないキーワード
   

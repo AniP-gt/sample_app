@@ -1,4 +1,3 @@
-# ユーザー登録のコントローラー
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy                                 #has_many=>userとmicropost_user_idを紐づける、dependent:destroy=> ユーザーが削除されたときに、そのユーザーに紐付いた（そのユーザーが投稿した）マイクロポストも一緒に削除される
   has_many :active_relationships, class_name:  "Relationship",              #ActiveRelationshipモデルを探してしまい）Relationshipモデルを見つけることができません。followerというクラス名は存在しないので、ここでもRailsに正しいクラス名を伝える
