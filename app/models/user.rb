@@ -82,10 +82,12 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago         #パスワード再設定メールの送信時刻が、現在時刻より2時間以上前（早い）の場合
   end
   
-  # マイクロポストのステータスフィードを実装するための準備
+  # ユーザーのステータスフィードを返す
   def feed
-    # Micropost.where("user_id = ?", id)                #SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション（SQL Injection）呼ばれる深刻なセキュリティホールを避けることができます
-    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)   #以下備考欄参照
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
   end
   
   
