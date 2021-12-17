@@ -82,11 +82,10 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago         #パスワード再設定メールの送信時刻が、現在時刻より2時間以上前（早い）の場合
   end
   
-  # 試作feedの定義
-  # 完全な実装は次章の「ユーザーをフォローする」を参照
   # マイクロポストのステータスフィードを実装するための準備
   def feed
-    Micropost.where("user_id = ?", id)                #SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション（SQL Injection）呼ばれる深刻なセキュリティホールを避けることができます
+    # Micropost.where("user_id = ?", id)                #SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション（SQL Injection）呼ばれる深刻なセキュリティホールを避けることができます
+    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)   #以下備考欄参照
   end
   
   
@@ -104,6 +103,8 @@ class User < ApplicationRecord
   def following?(other_user)
     following.include?(other_user)
   end
+  
+  
   
   
   #以下非公開
@@ -128,3 +129,5 @@ end
 #※「トークン」とは、パスワードの平文と同じような秘密情報です。パスワードとトークンとの一般的な違いは、パスワードはユーザーが作成・管理する情報であるのに対し、トークンはコンピューターが作成・管理する情報である点です。
 # selfというキーワードを使わないと、Rubyによってremember_tokenという名前のローカル変数が作成されてしまいます。 つまり、「remember_token」というrememberメソッド内で使えるローカル変数となってしまう
 # cookiesメソッド　=>　２つのハッシュ値 、value（値）とexpires（有効期限）（expiresは省略可　20年で有効期限切れになる設定は、Railsのpermanentに専用メソッドが追加）
+# feedのコード
+# SELECT * FROM micropostsWHERE user_id IN (<list of ids>) OR user_id = <user id>　がSQL文
