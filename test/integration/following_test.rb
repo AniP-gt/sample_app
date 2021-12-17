@@ -5,6 +5,7 @@ class FollowingTest < ActionDispatch::IntegrationTest
   # セットアップ
   def setup
     @user = users(:michael)
+    @other = users(:archer)
     log_in_as(@user)
   end
 
@@ -26,4 +27,37 @@ class FollowingTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", user_path(user)
     end
   end
+  
+  # 標準的な方法でユーザーに従う必要があります
+  test "should follow a user the standard way" do
+    assert_difference '@user.following.count', 1 do
+      post relationships_path, params: { followed_id: @other.id }
+    end
+  end
+  
+  # Ajaxでユーザーをフォローする必要があります
+  test "should follow a user with Ajax" do
+    assert_difference '@user.following.count', 1 do
+      post relationships_path, xhr: true, params: { followed_id: @other.id }
+    end
+  end
+
+  # 標準的な方法でユーザーのフォローを解除する必要があります
+  test "should unfollow a user the standard way" do
+    @user.follow(@other)
+    relationship = @user.active_relationships.find_by(followed_id: @other.id)
+    assert_difference '@user.following.count', -1 do
+      delete relationship_path(relationship)
+    end
+  end
+
+  # Ajaxでユーザーのフォローを解除する必要があります
+  test "should unfollow a user with Ajax" do
+    @user.follow(@other)
+    relationship = @user.active_relationships.find_by(followed_id: @other.id)
+    assert_difference '@user.following.count', -1 do
+      delete relationship_path(relationship), xhr: true
+    end
+  end
+  
 end
